@@ -17,6 +17,7 @@ Material.shade = function(material){
 			material.html.style.transform = transform;
 		}
 		material.html.style.boxShadow = boxShadow;
+		material.html.classList.add('material');
 }
 Material.addMaterial = function(name, html, height){
 	var material = {html: html, height: height, baseHeight: height, name: name};

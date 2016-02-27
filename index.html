@@ -5,13 +5,55 @@
 
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<title>Simple BigSemantics Demo</title>
+	<title>Grasp</title>
 
+  <!-- non BigSemantics include statements -->
+  	<script src="./BigSemanticsJavaScript/libraries/jquery-2.0.0.min.js"></script>
+    <script src="./js/hashmap.js"></script>
+
+
+  	<!-- bsjsCore Files. You must include them in this order so as to use any BigSemantics porject -->
+  	<!-- Readyable is a class used to handle the asynchronous load time of the BS project
+  		BSAutoSwitch is an interface to BigSemantics that can switch between using the lab's hosted service for metadata
+  			and using a browser-installed extension. BSService and BSSExtension are implementations -->
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/Readyable.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/BSAutoSwitch.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/BSService.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/BSExtension.js"></script>
+  	<!-- BSUtils, Downloader, ParsedURL, and simplBase are helper classes. Include them, but don't really worry about them-->
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/BSUtils.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/ParsedURL.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/Downloader.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/simpl/simplBase.js"></script>
+  	<!-- MetadataTask is the preffered interface for using BSJS when you only want data and not to render it via our software
+  		RepoMan loads a Meta-metadata repository. Avoid doing anything with it directly; it's messy-->
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/MetadataTask.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/RepoMan.js"></script>
+  	<!-- Various helped classes for renderers. MetadataViewModel takes our raw data and puts it in a nice format for the
+  		 various metadata renderers (of which only one is shown here). InterfaceStyle is a dictionary that lets us style
+  		 elements differently in different renderers. -->
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/bsjsCore/MetadataViewModel.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/renderers/interfaceStyle.js"></script>
+  	<!-- The RenderingFiles!! RendererBase is your entry point for rendering via our software. RenderingTask handles some various data processing and can, on a good day, select an ideal renderer for metadata if one isn't specified. Vanilla Mice, mice, baby does *most* of the rendering work. The initial plan was for VanillaMICE to extend RendererBase, but in practice they've began to diverge.
+
+  	Bootstrap.min.css is a neccesary evil - there's some particular bit of css in there that lets MICE render properly. I'm trying to hunt it
+  	down so that bootstrap is not a dependency, but I haven't succeeded yet
+  	-->
+
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/renderers/RendererBase.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/renderers/RenderingTask.js"></script>
+  	<script type="text/javascript" src="./BigSemanticsJavaScript/renderers/VanillaMICE.js"></script>
+      <link href="./BigSemanticsJavaScript/renderers/styles/metadataRenderer.css" rel="stylesheet" type="text/css">
+      <link href="./BigSemanticsJavaScript/libraries/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <script src="./js/material.js"></script>
+  <script src="./js/grasp.js"></script>
+  <script src="./js/choreography.js"></script>
 
 	<!--Webpage-specific javascript and CSS includes-->
-	<script src="./demo.js"></script>
+  <link href="./css/material.css" rel="stylesheet" type="text/css">
+  <link href="./css/choreography.css" rel="stylesheet" type="text/css">
 
-    <link href="./demo.css" rel="stylesheet" type="text/css">
+    <link href="./css/grasp.css" rel="stylesheet" type="text/css">
     <!-- I like the roboto font because it makes me feel like a real developer-->
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,900italic,900,700italic,700,500,400italic,500italic,300italic,300,100italic,100' rel='stylesheet' type='text/css'>
 
@@ -21,11 +63,19 @@
 
 <!-- Upon the page being loaded, the onLoad function in demo.js will be called-->
 
-<body onload="onLoad">
-	<div class="graspTitleBar">
-		<div class="logo">Grasp</div>
+<body onload="onload()">
+	<div class="appbar expanded green" id="appbar">
+		<div class="appLabel">Grasp</div>
 	</div>
-	<div class="welcome"><div class="welcometext">We believe the perfect phone is something you’ll know by feel. In under five minutes, we’ll guide you to your perfect match. Then, we’ll help you ask your friend’s for their opinion. Or, if you’re ready, we’ll give a printout or pdf you can take with you into the store.</div></div>
+  <div class="main expanded" id="main">
+    <div class="centeredText" id="startText">We believe the perfect phone is something you’ll know by feel.
+      In under five minutes, we’ll guide you to your perfect match. Then, we’ll help you ask
+       your friend’s for their opinion. Or, if you’re ready, we’ll give a printout or pdf you
+       can take with you into the store.</div>
+       <div class="button gray" id="startbutton" onclick="startButtonHandler()">Get Started</div>
+  </div>
+<!--
+    <div class="welcometext">We believe the perfect phone is something you’ll know by feel. In under five minutes, we’ll guide you to your perfect match. Then, we’ll help you ask your friend’s for their opinion. Or, if you’re ready, we’ll give a printout or pdf you can take with you into the store.</div></div>
 	<div class="welcome lower"><div class="startbutton">Get Started</div></div>
 <!--
 	<div class="cardRow">

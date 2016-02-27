@@ -1,0 +1,129 @@
+.appbar{
+  display: flex;
+  width: 105%;
+  position: fixed;
+  color: white;
+
+}
+.appbar.expanded{
+  font-size: 72px;
+  height: 160px;
+  line-height: 160px;
+}
+.appbar{
+  font-size: 32px;
+  height: 80px;
+  line-height: 80px;
+
+}
+.appLabel{
+  margin-left: 40px;
+}
+
+.green{
+  background-color:#4CAF50;
+}
+
+.gray{
+  background-color: #607D8B;
+}
+.button.gray:hover{
+  background-color: #B0BEC5;
+  cursor: pointer;
+
+}
+.button{
+  width: 160px;
+  align-self: center;
+  text-align: center;
+  color: white;
+  height: 60px;
+  font-size: 24px;
+  vertical-align: center;
+  line-height: 60px;
+  position: relative;
+  margin-top: 40px;
+}
+.main.expanded{
+  top: 220px;
+
+}
+.main{
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  top: 160px;
+  /*transition: top .125s ease;*/
+
+}
+
+.centeredText{
+  font-size: 16px;
+  width: 500px;
+  align-self: center;
+  text-align: center;
+  color: rgba(0, 0, 0, .54);
+}
+
+.facetRow{
+  height: 140px;
+  width: 60%;
+  align-self: center;
+  display: flex;
+  position: relative;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.carrierRow{
+	  height: 260px;
+    width: 60%;
+    display: flex;
+    align-self: center;
+    position: relative;
+    justify-content: space-around;
+    align-items: center;
+}
+.carrier{
+  width: 200px;
+  height: 100px;
+  background-size: 200px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 4px;
+  padding: 12px;
+
+}
+.carrier:hover{
+  border: 4px solid #4CAF50;
+  padding: 8px;
+  cursor: pointer;
+}
+.selected{
+  border: 4px solid #4CAF50;
+  padding: 8px;
+
+}
+.selected:hover{
+  border: 4px solid #607D8B;
+
+}
+
+.button.unselectable{
+  -webkit-filter: saturate(.2);
+}
+.button.unselectable.green:hover{
+  cursor: auto;
+  background-color:#4CAF50;
+}
+.button.unselectable.gray:hover{
+  cursor: auto;
+  background-color:#607D8B;
+}
+.at{
+	background-image: url("http://vignette1.wikia.nocookie.net/logopedia/images/6/69/AT%26T_logo_2005.png/revision/latest?cb=20100628142135");
+}
+.vz{
+	background-image: url("http://vignette4.wikia.nocookie.net/logopedia/images/4/4c/Verizon_Wireless_logo.png/revision/latest?cb=20110113033315");
+}

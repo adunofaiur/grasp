@@ -33,7 +33,8 @@
 .material{
 	background-color: white;
 	border-radius: 4px;
-	transition: width 2s, height 2s, transform .5s;
+	transition: line-height .125s, font .125s ease, height .125s, width .125s,
+	 height .125s, background-color .125s, -webkit-filter: .125s;
 
 }
 body{
