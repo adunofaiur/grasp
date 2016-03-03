@@ -43,6 +43,7 @@
   line-height: 60px;
   position: relative;
   margin-top: 40px;
+    -webkit-user-select: none;
 }
 .main.expanded{
   top: 220px;
@@ -74,6 +75,7 @@
   position: relative;
   justify-content: flex-start;
   align-items: center;
+
 }
 
 .carrierRow{
@@ -93,12 +95,19 @@
   background-position: center;
   border-radius: 4px;
   padding: 12px;
-
+    -webkit-user-select: none;
 }
 .carrier:hover{
   border: 4px solid #4CAF50;
   padding: 8px;
   cursor: pointer;
+}
+
+.carrier.unselectable:hover{
+  border: 4px solid #607D8B;
+  padding: 8px;
+  cursor: pointer;
+
 }
 .selected{
   border: 4px solid #4CAF50;
@@ -109,6 +118,129 @@
   border: 4px solid #607D8B;
 
 }
+.button:hover{
+  cursor: pointer;
+}
+.button.green:hover{
+  cursor: pointer;
+  background-color: #81C784;
+}
+
+.facetRowItem{
+  height: 80px;
+  width: 140px;
+  padding: 12px;
+  display: flex;
+  margin-right: 20px;
+    -webkit-user-select: none; 
+
+}
+.backgroundLeft{
+  width:60px;
+  height: 100%;
+  background-size: 60px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-right: 1px solid rgba(0,0,0, .2);
+  padding-right: 10px;
+}
+.backgroundRight{
+  width:60px;
+  margin-left: 10px;
+  height: 80px;
+  background-size: 60px;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+.facetSingleBackground{
+  width:140px;
+  height: 100%;
+  background-size: 120px;
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+.facetRowItem:hover{
+  border: 4px solid #4CAF50;
+  padding: 8px;
+  cursor: pointer;
+}
+
+
+.nope{
+  animation-name: nopeFrame;
+  animation-duration: .15s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 2;
+  position: relative;
+}
+
+@keyframes nopeFrame{
+  0%{
+    left: 0px;
+  }
+  25%{
+    left: 10px;
+  }
+
+  75%{
+    left: -10px
+  }
+  100%{
+    left: 0px;
+  }
+}
+.priceRow{
+  height: 140px;
+  align-self: center;
+  display: flex;
+  position: relative;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  flex-direction: column;
+
+}
+.priceLabels{
+  height: 140px;
+  display: flex;
+  align-self: center;
+  justify-content: space-around;
+  align-items: center;
+}
+.priceLabel{
+  color: #455A64;
+  font-size: 36px;
+  line-height: 36px;
+  text-align: center;
+  width:  410px;
+
+}
+.chump{
+  font-size: 24px;
+  color: rgba(69, 90, 100, .54);
+}
+.priceInput{
+  color: rgba(0, 0, 0, .75);
+  font-size: 36px;
+  line-height: 36px;
+  text-align: center;
+  width: 300px;
+  border: none;
+  padding: 0;
+  padding-bottom: 4px;
+  border-bottom: solid 4px #4CAF50;
+  margin: 0 55px 0 55px;
+
+}
+.priceValues{
+      width: 820px;
+}
+.priceText{
+  margin-top: 42px;
+}
+
 
 .button.unselectable{
   -webkit-filter: saturate(.2);
@@ -126,4 +258,19 @@
 }
 .vz{
 	background-image: url("http://vignette4.wikia.nocookie.net/logopedia/images/4/4c/Verizon_Wireless_logo.png/revision/latest?cb=20110113033315");
+}
+.att{
+	background-image: url("http://vignette1.wikia.nocookie.net/logopedia/images/6/69/AT%26T_logo_2005.png/revision/latest?cb=20100628142135");
+}
+.verizon{
+	background-image: url("http://vignette4.wikia.nocookie.net/logopedia/images/4/4c/Verizon_Wireless_logo.png/revision/latest?cb=20110113033315");
+}
+.apple{
+  background-image: url("http://vignette3.wikia.nocookie.net/logopedia/images/8/88/Iphone.png/revision/latest?cb=20140104220918");
+}
+.samsung{
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/2000px-Samsung_Logo.svg.png");
+}
+.nexus{
+  background-image: url("http://logonoid.com/images/nexus-logo.png");
 }

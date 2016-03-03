@@ -3,6 +3,7 @@
   animation-name: upAndAwayFrame;
   animation-duration: .5s;
   animation-fill-mode: forward;
+  z-index: 7;
 }
 @keyframes upAndAwayFrame{
   0%{
@@ -21,14 +22,48 @@
   animation-fill-mode: forward;
 
 }
+.upAndStayLower{
+  position: relative;
+  animation-name: upAndStayLowerFrame;
+  animation-duration: .5s;
+  animation-fill-mode: forward;
+
+}
+.upAndStayHigher{
+  position: relative;
+  animation-name: upAndStayHigherFrame;
+  animation-duration: .5s;
+  animation-fill-mode: forward;
+
+}
 
 @keyframes upAndStayFrame{
   0%{
-    top: 160px;
+    top: 164px;
     opacity: 0;
   }
   100%{
-    top: -180px;
+    top: -176px;
+    opacity: 1.0;
+  }
+}
+@keyframes upAndStayLowerFrame{
+  0%{
+    top: 0px;
+    opacity: 0;
+  }
+  100%{
+    top: -380px;
+    opacity: 1.0;
+  }
+}
+@keyframes upAndStayHigherFrame{
+  0%{
+    top: 380px;
+    opacity: 0;
+  }
+  100%{
+    top: -0px;
     opacity: 1.0;
   }
 }
