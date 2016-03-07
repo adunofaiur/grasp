@@ -1,0 +1,121 @@
+.phoneContainer{
+  display: flex;
+  flex-direction: column;
+  margin-right: 24px;
+  width: 320px;
+}
+.phone{
+  padding: 12px;
+  width: 300px;
+  height: 500px;
+}
+
+.phoneLabel{
+  display: flex;
+  line-height: 32px;
+  width: 100%;
+  font-size: 24px;
+  overflow: hidden;
+  white-space: nowrap;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-overflow: ellipsis;
+}
+.phoneName{
+  color: rgba(0,0,0);
+  margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.phoneImg{
+  height: 400px;
+  width: 200px;
+  margin-left: 46px;
+
+}
+.phonePrice{
+  color: rgba(0,0,0, .54);
+}
+.phoneRating{
+  margin-left: 8px;
+  color: rgba(0,0,0, .54);
+}
+.phoneRatingHighlighted{
+  color: #2196F3;
+}
+.phoneImage{
+  width: 300px;
+  height: 428px;
+  background-size: 300px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.miceContainer{
+  background: white;
+  position: relative;
+  overflow-x: auto;
+  width: 660px;
+  top: -200px;
+}
+.miceContainer.loading{
+  font-size: 32px;
+  z-index: 4;
+  width: 60px;
+  height: 60px;
+  left: 120px;
+}
+.gif{
+  width: 60px;
+  height: 60px;
+}
+
+.annotationCont{
+  background: white;
+  position: relative;
+  top: -200px;
+  width: 400px;
+  left: -40px;
+
+}
+textarea{
+  color: black;
+  font-size: 14px;
+  width: 398px;
+  max-width: 398px;
+  padding: 0 0 0 0;
+}
+.textControls{
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
+
+
+.phoneControls{
+
+  display: flex;
+    width: 100%;
+    height: 50px;
+    justify-content: space-around;
+    align-items: center;
+}
+.phoneControl{
+  color: rgba(0,0,0,.54);
+  border-radius: 32px;
+  font-size: 32px;
+  /* height: 32px; */
+  padding: 4px 0 4px 0;
+  width: 32px;
+  line-height: 32px;
+  text-align: center;
+}
+.phoneControl:hover{
+  color: white;
+  background-color: rgba(0,0,0, .54);
+  cursor: pointer;
+}

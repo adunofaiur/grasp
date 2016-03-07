@@ -41,5 +41,6 @@ GraspChoreography.removeAnimation = function(event){
   $(event.target).removeClass('upAndStayHigher');
   $(event.target).removeClass('nope');
   event.target.removeEventListener('animationend', GraspChoreography.removeAnimation);
+  event.stopPropagation();
 
 }
