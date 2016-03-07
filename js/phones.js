@@ -1,6 +1,11 @@
-
+/*
+  Phone class.
+  Builds its own displays and handles most of its own events (though some are handled via static methods in Grasp)
+  Tragically, a lot of info had to be hard=coded for this demo
+*/
+//The largest width we support - used to scale phone images
 var MAX_WIDTH = 77.8;
-//price has to hard coded, unfortunately
+
 function Phone(name, imageURL, displayName, price, carriers, brand, bestBuyURL, wikipediaURL, imageSearchURL, widthmm, heightmm){
     this.name = name;
     this.bestBuyURL = bestBuyURL;
@@ -21,17 +26,15 @@ function Phone(name, imageURL, displayName, price, carriers, brand, bestBuyURL, 
     this.widthmm = widthmm;
     this.heightmm = heightmm;
 }
-
+//Prepares the metadata used by the phones
 Phone.prototype.fetchMetadata = function(){
   var that = this;
   bsService.loadMetadata(that.bestBuyURL, null, function(err, result){
     if(err){
-      console.log(err);
       return;
     }else{
       that.bestBuyMD = BSUtils.unwrap(result.metadata);
       that.bestBuyMDReady = true;
-      console.log(that.displayName + "bb");
 
       try{
         //  this.features = this.bestBuyMD.features;
@@ -39,7 +42,6 @@ Phone.prototype.fetchMetadata = function(){
           that.rating = that.rating.substring(0, 3);
       }
       catch(e){
-        console.log(that.displayName + "bbERR");
 
       }
     }
@@ -55,16 +57,16 @@ Phone.prototype.fetchMetadata = function(){
       that.googleImageMDReady = true;
       try{
           that.searchResults = that.googleImageMD.search_results;
-          console.log(that.displayName + "gi");
 
       }
       catch(e){
-        console.log(that.displayName + "giERR");
       }
     }
 
   });
 }
+//Builds and HTML representation of the phone
+//The final flag is true if the phone is being displayed on the final screen
 
 Phone.prototype.buildDisplay = function(parent, final){
   if(final){
@@ -99,7 +101,9 @@ Phone.prototype.buildDisplay = function(parent, final){
 
   phoneMaterial.appendChild(phoneImage);
   phoneContainer.appendChild(phoneMaterial);
+  //if we're not on Grasp's final screen, show controls
   if(!final){
+
     var controlRow = buildDiv('phoneControls');
     var check = buildDiv('phoneControl');
     check.innerHTML = '<i class="material-icons">bookmark</i>';
@@ -127,6 +131,7 @@ Phone.prototype.buildDisplay = function(parent, final){
 
     phoneContainer.appendChild(controlRow);
   }else{
+    //otherwise, just show the annotation
     var annotationRow = buildDiv('annotationOutput');
     annotationRow.innerHTML = '"' + this.userAnnotation + '"';
     phoneContainer.appendChild(annotationRow)
@@ -138,7 +143,7 @@ Phone.prototype.buildDisplay = function(parent, final){
 
 //Prepares in memory phone objects.
 //Sadly, a lot of info will be hard-coded
-//We only provide about 12 phones - enough to demo the interface
+//We only provide about 8 phones - enough to demo the interface
 function preparePhones(){
 //name, imageURL, displayName, price, carriers, brand, bestBuyURL, wikipediaURL, imageSearchURL
   var nexus5x = new Phone("nexus5x", "./img/nexus5x.png",
@@ -202,6 +207,7 @@ function preparePhones(){
 
   }
 }
+//Dismisses a MICE container if the user clicks outside it
 function clickOnBody(event){
   var possibleParent = $(event.target).closest('.miceContainer');
   if(possibleParent.length > 0){
@@ -212,6 +218,8 @@ function clickOnBody(event){
       document.body.removeEventListener('click', clickOnBody);
   }
 }
+//Dismisses an annotation container if the user clicks outside it
+
 function clickOnBodyAnn(event){
   var possibleParent = $(event.target).closest('.annotationCont');
   if(possibleParent.length > 0){
@@ -222,8 +230,8 @@ function clickOnBodyAnn(event){
       document.body.removeEventListener('click', clickOnBodyAnn);
   }
 }
-
-Phone.prototype.openAnnotation= function(){
+//Creates and opens the annotation pop-over for the used
+Phone.prototype.openAnnotation = function(){
   var textCont = buildDiv('annotationCont');
   var textIn = document.createElement('textarea');
   textIn.rows = 2;
@@ -247,13 +255,15 @@ Phone.prototype.openAnnotation= function(){
   Material.addMaterial('ANN' + this.name, textCont, 8);
 
 }
-
+//Toggles the phone's pinned status
 Phone.prototype.togglePin = function(){
+
   if(this.pinned){
     $(this.container).find('.phone').toggleClass('selected');
     this.pinned = !this.pinned;
     Grasp.pinnedPhones = Grasp.pinnedPhones - 1;
   }else{
+    //if too many phones are pinned, do not allow another pin
     if(Grasp.pinnedPhones >= 2){
       $(this.container).addClass('nope');
       this.container.addEventListener('animationend', GraspChoreography.removeAnimation);
@@ -272,13 +282,13 @@ Phone.prototype.togglePin = function(){
 
   }
 }
-
+//gets rid of a phone the user doesn't want
 Phone.prototype.remove = function(){
   GraspChoreography.upAndAway([this.container]);
   this.removed = true;
 }
 
-
+//Builds/shows a phone's wikipedia page renderering
 Phone.prototype.showWikipedia = function(){
   if(this.wikipediaRenderingReady){
     $(this.miceContainer).css('display', '');

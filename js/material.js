@@ -1,7 +1,7 @@
 var Material = {};
 Material.materialObjects = new Map();
 
-
+//Draws a drop shadow and sets the z index of an element
 Material.shade = function(material){
 	material.html.style.zIndex = material.height.toString();
 		var boxShadow = "0px " + (material.height).toString() + "px ";
@@ -19,6 +19,7 @@ Material.shade = function(material){
 		material.html.style.boxShadow = boxShadow;
 		material.html.classList.add('material');
 }
+//Adds a div to the material map and shades it
 Material.addMaterial = function(name, html, height){
 	var material = {html: html, height: height, baseHeight: height, name: name};
 	Material.shade(material);

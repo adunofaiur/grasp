@@ -1,3 +1,7 @@
+/*
+  Static class that holds methods for animating Grasp HTML - with some of that reuable goodness
+*/
+
 var GraspChoreography = {};
 
 
@@ -15,7 +19,7 @@ GraspChoreography.removeFromDisplay = function(event){
   $(event.target).css('display', 'none');
   $(event.target).removeClass('upAndAway');
 }
-
+//Animates an item moving into place
 GraspChoreography.upAndStay = function(swooshables, option){
   for(var i = 0; i < swooshables.length; i++){
     var swoosh = swooshables[i];

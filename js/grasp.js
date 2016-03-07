@@ -1,24 +1,32 @@
-
+/*
+  Static methods for Grasp.
+*/
 var bsService = new BSAutoSwitch();
 var Grasp = {};
+//List of facets used
 Grasp.facetList = [];
+//Facet object
+function Facet(facetType, facetValue){
+  this.facetType = facetType;
+  //An array of values
+  this.value = facetValue;
+}
+
 //used to keep track of how many carriers/brands have been selected
 Grasp.carriers = [{name: "verizon", active: false},{name: "att", active: false}];
 Grasp.brands = [{name: "apple", active: false},{name: "htc", active: false},
               {name: "nexus", active: false}];
-
 Grasp.activeCarrierCount = 0;
 Grasp.activeBrandsCount = 0;
+
 Grasp.pinnedPhones = 0;
 Grasp.stickerPrice = 499.99;
 Grasp.monthlyPrice = 20.83;
+//Phones are stored in an array for iteration and a Map for constant-time access
 Grasp.phones = [];
 Grasp.phoneMap = new Map();
+//Flags that we're on the screen where a user picks phones
 Grasp.selectScreen = false;
-function Facet(facetType, facetValue){
-  this.facetType = facetType;
-  this.value = facetValue;
-}
 
 
 function onload(){
@@ -35,7 +43,8 @@ function onload(){
 
 
 }
-function startButtonHandler(event){
+//Builds the screen for uesrs to select a their carriers
+Grasp.buildCarrierScreen = function(event){
   //Change appBar classes to shrink it
   $('#appbar').removeClass('green').removeClass('expanded').addClass('gray');
   $('#main').removeClass('expanded');
@@ -47,45 +56,39 @@ function startButtonHandler(event){
   nodesToRemove.push(document.getElementById('startText'));
   GraspChoreography.upAndAway(nodesToRemove);
   //use choreography to move new stuff to resting position
-  Grasp.prepareFacetScreens();
-}
+  var main = document.getElementById('main');
+  //Build empty facet row
 
-Grasp.toggleCarrier = function(carrierName){
-  for(var i = 0; i < Grasp.carriers.length; i++){
-    if(carrierName == Grasp.carriers[i].name){
 
-      if(Grasp.carriers[i].active){
-        Grasp.activeCarrierCount = Grasp.activeCarrierCount - 1;
-      }else{
-        Grasp.activeCarrierCount = Grasp.activeCarrierCount + 1;
-      }
+  var facetRow = buildDiv('facetRow');
+  main.appendChild(facetRow);
 
-      Grasp.carriers[i].active = !Grasp.carriers[i].active;
-    }
+  //build container for selectable carriers
+  var optionRow = buildDiv('optionRow', 'carrierYas');
+  var attFacet = buildDiv('carrier at', 'att')
+  var verizonFacet = buildDiv('carrier vz', 'verizon');
+  attFacet.addEventListener('click', Grasp.carrierHandler);
+  verizonFacet.addEventListener('click', Grasp.carrierHandler);
 
-  }
+  optionRow.appendChild(attFacet);
+  optionRow.appendChild(verizonFacet);
+  main.appendChild(optionRow);
 
-}
+  var carrierText = buildDiv('centeredText', 'carrierText');
+  carrierText.innerHTML = "Choose one or two carriers for your new companion"
+  main.appendChild(carrierText);
 
-Grasp.toggleBrand = function(brandName){
-  for(var i = 0; i < Grasp.brands.length; i++){
-    if(brandName == Grasp.brands[i].name){
+  var facetConfirm = buildDiv('button green unselectable', 'facetButton')
+  facetConfirm.innerHTML = "Confirm";
+  facetConfirm.addEventListener('click', Grasp.buildBrandScreen);
+  Material.addMaterial('carrierButton', facetConfirm, 4);
 
-      if(Grasp.brands[i].active){
-        Grasp.activeBrandsCount = Grasp.activeBrandsCount - 1;
-      }else{
-        Grasp.activeBrandsCount = Grasp.activeBrandsCount + 1;
-
-      }
-
-      Grasp.brands[i].active = !Grasp.brands[i].active;
-    }
-
-  }
+  main.appendChild(facetConfirm);
+  GraspChoreography.upAndStay([optionRow, carrierText, facetConfirm]);
 
 }
-
-Grasp.carrierButtonHandler = function(event){
+//Handles clicks on a carrier
+Grasp.carrierHandler = function(event){
     var carrierName = event.target.id;
 
     if($(event.target).hasClass('selected')){
@@ -106,47 +109,7 @@ Grasp.carrierButtonHandler = function(event){
 
 }
 
-
-
-Grasp.prepareFacetScreens = function(){
-    var main = document.getElementById('main');
-    //Build empty facet row
-
-
-    var facetRow = buildDiv('facetRow');
-    main.appendChild(facetRow);
-
-    //build container for selectable carriers
-    var optionRow = buildDiv('optionRow', 'carrierYas');
-    var attFacet = buildDiv('carrier at', 'att')
-    var verizonFacet = buildDiv('carrier vz', 'verizon');
-    attFacet.addEventListener('click', Grasp.carrierButtonHandler);
-    verizonFacet.addEventListener('click', Grasp.carrierButtonHandler);
-
-    optionRow.appendChild(attFacet);
-    optionRow.appendChild(verizonFacet);
-    main.appendChild(optionRow);
-
-    var carrierText = buildDiv('centeredText', 'carrierText');
-    carrierText.innerHTML = "Choose one or two carriers for your new companion"
-    main.appendChild(carrierText);
-
-    var facetConfirm = buildDiv('button green unselectable', 'facetButton')
-    facetConfirm.innerHTML = "Confirm";
-    facetConfirm.addEventListener('click', Grasp.facetButtonHandler);
-    Material.addMaterial('carrierButton', facetConfirm, 4);
-
-    main.appendChild(facetConfirm);
-    GraspChoreography.upAndStay([optionRow, carrierText, facetConfirm]);
-
-
-
-    //build the two biggest carriers (more in the future)
-    //build confirm button
-    //choereoghraph this in
-}
-
-
+//Builds the interal images of a facetRowItem. resued in several places
 Grasp.buildFacetInnards = function(parent, facet){
   if(facet.facetType == 'carriers' || facet.facetType == 'brands'){
 
@@ -171,7 +134,7 @@ Grasp.buildFacetInnards = function(parent, facet){
   }
 
 }
-
+//Builds a facetRow Item
 Grasp.buildFacet = function(facet){
     var facetRow = $('.facetRow')[0];
 
@@ -184,7 +147,7 @@ Grasp.buildFacet = function(facet){
     facetNode.style.zIndex = "";
     return facetNode;
 }
-
+//Removes a facet popover display from existence if the user clicks outside of it
 function popoverCancel(event){
   var possibleParent = $(event.target).closest('.facetPopOver');
   if(possibleParent.length > 0){
@@ -199,9 +162,9 @@ function popoverCancel(event){
     document.body.removeEventListener('click', popoverCancel);
   }
 }
-
+//Builds a 'popover' view to reselect a faceyt
 Grasp.facetPopOver = function(event){
-
+  //If the popover has already been built, just show the existing one
   if($(event.target).find('.facetPopOver').length > 0){
     $(event.target).find('.facetPopOver').css('display', 'flex');
     var facetNode = $(event.target).closest('.facetRowItem')[0];
@@ -214,6 +177,7 @@ Grasp.facetPopOver = function(event){
 
     return;
   }
+  //Otherwise we start building!
   var facetNode = $(event.target).closest('.facetRowItem')[0];
   facetNode.removeEventListener('click', Grasp.facetPopOver);
   var type = facetNode.id;
@@ -221,11 +185,15 @@ Grasp.facetPopOver = function(event){
   var row;
 
   if(type == "carriers"){
+
     row = document.getElementById('carrierYas');
     popOver.style.height = "320px"
+
   }else if (type == "brands"){
+
     row = document.getElementById('brandRow');
     popOver.style.height = "400px"
+
 
   }
   if (type != "price"){
@@ -233,6 +201,7 @@ Grasp.facetPopOver = function(event){
     $(row).find('.carrier').addClass('popped');
     $(row).addClass('popped').css('display', 'flex');
     $(row).detach().appendTo(popOver);
+
  }else{
    row = document.getElementById('priceRow');
 
@@ -257,7 +226,8 @@ Grasp.facetPopOver = function(event){
   popOver.appendChild(popConfirm)
   facetNode.appendChild(popOver);
 }
-
+//If a user confirms their new facets, we rebuild the facetRowItem and
+//may
 Grasp.handlePopConfirm = function(event){
   if(Grasp.selectScreen){
     var main = document.getElementById('main');
@@ -304,69 +274,78 @@ Grasp.handlePopConfirm = function(event){
   }
   Grasp.sortPhoneGrid();
 
-    var listener = $('.facetRowItem');
-    for(var i = 0; i < listener.length; i++){
-      listener[i].addEventListener('click', Grasp.facetPopOver)
-    }
-    $('.facetPopOver').css('display', 'none');
+  var listener = $('.facetRowItem');
+  for(var i = 0; i < listener.length; i++){
+    listener[i].addEventListener('click', Grasp.facetPopOver)
+  }
+  $('.facetPopOver').css('display', 'none');
 
 
-    //update the display of our facet nodes
-    var facetNode = $(event.target).closest('.facetRowItem');
-    $(facetNode).find('.priceFacetLabel').remove();
-    $(facetNode).find('.backgroundLeft').remove();
-    $(facetNode).find('.backgroundRight').remove();
+  //update the display of our facet nodes
+  var facetNode = $(event.target).closest('.facetRowItem');
+  $(facetNode).find('.priceFacetLabel').remove();
+  $(facetNode).find('.backgroundLeft').remove();
+  $(facetNode).find('.backgroundRight').remove();
 
+//This is the part where we actually update the facets
+  var facet;
+  var facetNames = [];
 
-    var facet;
-    var facetNames = [];
-    if(facetNode[0].id == 'carriers'){
+  if(facetNode[0].id == 'carriers'){
 
-      for(var i = 0; i < Grasp.carriers.length; i++){
-        if(Grasp.carriers[i].active){
-          facetNames.push(Grasp.carriers[i].name);
-        }
+    for(var i = 0; i < Grasp.carriers.length; i++){
+      if(Grasp.carriers[i].active){
+        facetNames.push(Grasp.carriers[i].name);
       }
-      facet = new Facet(facetNode[0].id, facetNames)
-    }else if(facetNode[0].id == 'brands'){
-      for(var i = 0; i < Grasp.brands.length; i++){
-        if(Grasp.brands[i].active){
-          facetNames.push(Grasp.brands[i].name);
-        }
-      }
-       facet = new Facet(facetNode[0].id, facetNames)
-    }else{
-      facet = new Facet(facetNode[0].id, [Grasp.stickerPrice]);
     }
 
+    facet = new Facet(facetNode[0].id, facetNames)
 
-    Grasp.buildFacetInnards(facetNode[0], facet);
-    document.body.removeEventListener('click', popoverCancel);
-    event.stopPropagation();
+  }else if(facetNode[0].id == 'brands'){
+
+    for(var i = 0; i < Grasp.brands.length; i++){
+      if(Grasp.brands[i].active){
+        facetNames.push(Grasp.brands[i].name);
+      }
+    }
+
+     facet = new Facet(facetNode[0].id, facetNames)
+
+  }else{
+    facet = new Facet(facetNode[0].id, [Grasp.stickerPrice]);
+  }
+
+
+  Grasp.buildFacetInnards(facetNode[0], facet);
+  document.body.removeEventListener('click', popoverCancel);
+  event.stopPropagation();
 
 
   }
 }
-Grasp.facetButtonHandler = function(){
+//Builds the screen to select a brand
+Grasp.buildBrandScreen = function(){
+  //If nothings selected, quit
   if(Grasp.activeCarrierCount < 1){
     return;
   }
-  var main = document.getElementById('main');
 
+  var main = document.getElementById('main');
+  //Get rid of ye olde stuff
   var facetButton = $('#facetButton')[0];
   var optionRow = $('.optionRow')[0];
   var textRow = $('#carrierText')[0];
   GraspChoreography.upAndAway([facetButton, optionRow, textRow]);
 
-
+  //Build our new brand html
   var newoptionRow = buildDiv('optionRow', 'brandRow');
   var appleFacet = buildDiv('carrier apple', 'apple')
   var htcFacet = buildDiv('carrier htc', 'htc');
   var nexusFacet = buildDiv('carrier nexus', 'nexus');
 
-  appleFacet.addEventListener('click', Grasp.brandButtonHandler);
-  htcFacet.addEventListener('click', Grasp.brandButtonHandler);
-  nexusFacet.addEventListener('click', Grasp.brandButtonHandler);
+  appleFacet.addEventListener('click', Grasp.brandSelectHandler);
+  htcFacet.addEventListener('click', Grasp.brandSelectHandler);
+  nexusFacet.addEventListener('click', Grasp.brandSelectHandler);
 
   newoptionRow.appendChild(appleFacet);
   newoptionRow.appendChild(htcFacet);
@@ -379,7 +358,7 @@ Grasp.facetButtonHandler = function(){
       facetNames.push(Grasp.carriers[i].name);
     }
   }
-
+  //Build our rfacet row item
   var carrierFacet = new Facet('carriers', facetNames);
   Grasp.facetList.push(carrierFacet);
   var facetRowItem = Grasp.buildFacet(carrierFacet);
@@ -391,20 +370,16 @@ Grasp.facetButtonHandler = function(){
 
   var brandConfirm = buildDiv('button green unselectable', 'brandButton')
   brandConfirm.innerHTML = "Confirm";
-  brandConfirm.addEventListener('click', Grasp.brandConfirmButtonHandler);
+  brandConfirm.addEventListener('click', Grasp.buildPriceScreen);
   Material.addMaterial('brandConfirm', brandConfirm, 4);
 
   main.appendChild(brandConfirm);
-
+  //Get animated AF
   GraspChoreography.upAndStay([facetRowItem], 'higher');
   GraspChoreography.upAndStay([brandConfirm, newoptionRow, brandText], 'lower');
-  //I should double check to see if anything's selected.
-  //Build the brand stuff
-  //build facet controls in top bar
-  //Swoop current stuff off
-  //swoop in
-}
 
+}
+//Sorts the grid of phone displays. in 3D! (jk not really)
 Grasp.sortPhoneGrid = function(mode){
   if(!mode){
     mode = "width"
@@ -432,7 +407,8 @@ Grasp.sortPhoneGrid = function(mode){
     $(phonesToSort[i].container).appendTo('#phoneGrid');
   }
 }
-Grasp.brandConfirmButtonHandler = function(){
+
+Grasp.buildPriceScreen = function(){
   if(Grasp.activeBrandsCount < 1){
     return;
   }
@@ -498,13 +474,14 @@ Grasp.brandConfirmButtonHandler = function(){
 
   var priceConfirm = buildDiv('button green ', 'priceButton')
   priceConfirm.innerHTML = "Confirm";
-  priceConfirm.addEventListener('click', Grasp.priceConfirmButtonHandler);
+  priceConfirm.addEventListener('click', Grasp.buildSelectScreen);
   Material.addMaterial('priceConfirm', priceConfirm, 4);
 
   main.appendChild(priceConfirm);
 
   GraspChoreography.upAndStay([facetRowItem], 'higher');
   GraspChoreography.upAndStay([priceConfirm, priceRow, priceText], 'lower');
+  //Our event handlers for the price input. Used to keep the two in synch
   $('#stickerInput').on('keypress', function(e) {
       if(e.which == 13){
         Grasp.stickerPrice = parseFloat($(this).val())
@@ -535,7 +512,7 @@ Grasp.brandConfirmButtonHandler = function(){
 
 }
 
-Grasp.brandButtonHandler = function(event){
+Grasp.brandSelectHandler = function(event){
     var brandName = event.target.id;
     var selected = $(event.target).hasClass('selected');
     if(Grasp.activeBrandsCount < 2 || selected){
@@ -634,7 +611,7 @@ Grasp.byHeight = function(){
   }
 }
 
-Grasp.priceConfirmButtonHandler = function(){
+Grasp.buildSelectScreen = function(){
   var main = document.getElementById('main');
 
   Grasp.stickerPrice = parseFloat($('#stickerInput').val())
@@ -694,8 +671,9 @@ Grasp.priceConfirmButtonHandler = function(){
 
 
 }
-
+//Builds the final screen for th user
 Grasp.finalButtonHandler = function(){
+
   var main = document.getElementById('main');
   $('#appbar').addClass('green').removeClass('gray');
   //get rid of shiz
@@ -762,7 +740,44 @@ Grasp.annotationRemove = function(event){
 
 }
 
+/*
+  Boring methods that take care of data.
+*/
+//Toggles a carrier as selected or not
+Grasp.toggleCarrier = function(carrierName){
+  for(var i = 0; i < Grasp.carriers.length; i++){
+    if(carrierName == Grasp.carriers[i].name){
 
+      if(Grasp.carriers[i].active){
+        Grasp.activeCarrierCount = Grasp.activeCarrierCount - 1;
+      }else{
+        Grasp.activeCarrierCount = Grasp.activeCarrierCount + 1;
+      }
+
+      Grasp.carriers[i].active = !Grasp.carriers[i].active;
+    }
+
+  }
+
+}
+//Toggles a brand as selected or not
+
+Grasp.toggleBrand = function(brandName){
+  for(var i = 0; i < Grasp.brands.length; i++){
+    if(brandName == Grasp.brands[i].name){
+
+      if(Grasp.brands[i].active){
+        Grasp.activeBrandsCount = Grasp.activeBrandsCount - 1;
+      }else{
+        Grasp.activeBrandsCount = Grasp.activeBrandsCount + 1;
+
+      }
+
+      Grasp.brands[i].active = !Grasp.brands[i].active;
+    }
+
+  }
+}
 
 function buildDiv(className, id){
 	var elem = document.createElement('div');
